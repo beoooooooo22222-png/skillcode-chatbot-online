@@ -46,23 +46,26 @@ grok = None
 def get_db():
     global db
     if db is None:
-        from src.database import Database
-        db = Database()
-        logger.info("Using SQLite + FAISS Vector DB")
+        try:
+            from src.database import Database
+            db = Database()
+            logger.info("Database initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize database: {e}")
+            # Return a dummy or handle gracefully to prevent crash
+            return None
     return db
-
-def get_grok():
-    global grok
-    if grok is None:
-        grok = GrokService()
-    return grok
 
 # Start book auto-upload scheduler (once)
 with app.app_context():
     if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        _db = get_db()
-        start_book_scheduler(_db)
-        grok = get_grok()
+        try:
+            _db = get_db()
+            if _db:
+                start_book_scheduler(_db)
+            grok = get_grok()
+        except Exception as e:
+            logger.warning(f"Startup task failed: {e}")
 
 @app.context_processor
 def inject_user():
