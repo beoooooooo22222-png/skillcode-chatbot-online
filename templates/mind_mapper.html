@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Mapper - SkillCode GPT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+    <!-- Mermaid.js for Visual Mind Maps -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#6366f1',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#4f46e5',
+                lineColor: '#cbd5e1',
+                secondaryColor: '#f8fafc',
+                tertiaryColor: '#fff'
+            }
+        });
+    </script>
+    <style>
+        .mermaid {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            overflow-x: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="assistant-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">
+                    <img src="{{ url_for('static', filename='images/app-background.jpg') }}" alt="Logo"
+                        style="height: 30px; vertical-align: middle; margin-right: 8px;">
+                </span>
+                <span>SkillCode GPT</span>
+                <button class="sidebar-toggle-main" id="sidebarToggleBtn">
+                    <span id="toggleIcon">◀</span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard" class="nav-link">
+                    <span class="nav-icon">🏠</span> <span>Dashboard</span>
+                </a>
+                <a href="/general-assistant" class="nav-link">
+                    <span class="nav-icon">💡</span> <span>General Assistant</span>
+                </a>
+                <a href="/homework-assistant" class="nav-link">
+                    <span class="nav-icon">📝</span> <span>Homework</span>
+                </a>
+                <a href="/exam-preparation" class="nav-link">
+                    <span class="nav-icon">📚</span> <span>Exam Prep</span>
+                </a>
+                <a href="/study-planner" class="nav-link">
+                    <span class="nav-icon">📅</span> <span>Study Planner</span>
+                </a>
+                <a href="/tutor-assistant" class="nav-link">
+                    <span class="nav-icon">👨‍🏫</span> <span>Tutor</span>
+                </a>
+                <a href="/mind-mapper" class="nav-link active">
+                    <span class="nav-icon">🧠</span> <span>Mind Mapper</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar History -->
+            <div class="sidebar-history">
+                <div class="sidebar-history-title">🕒 Recent Maps</div>
+                <div class="sidebar-history-list" id="sidebarHistoryList">
+                    <!-- History items will be populated via JS -->
+                    <div style="color: #999; font-size: 11px; padding: 10px; text-align: center;">
+                        No history yet.
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <a href="/logout" class="logout-link">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="chat-container">
+                <header class="assistant-header"
+                    style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>🧠 Mind Mapper</h1>
+                        <p>Visualize complex topics with interactive mind maps and summaries</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="download-chat-btn" onclick="downloadFullChat('Mind_Map')">
+                            <span>📄</span> Download PDF
+                        </button>
+                        <button class="new-chat-btn" onclick="startNewChat()">
+                            <span>✨</span> New Chat
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Customization Panel -->
+                <div class="customization-panel" id="mindmap-panel">
+                    <div class="panel-header">
+                        <h3>🧠 Mind Map Settings</h3>
+                        <button class="panel-toggle">▼</button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="params-grid">
+                            <div class="param-group" style="max-width: 400px;">
+                                <label for="subject">Source Lesson / Book</label>
+                                <select id="subject" class="subject-dropdown">
+                                    <option value="">Loading subjects...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-area">
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>🧠 Welcome to Mind Mapper! I can create:</p>
+                                <ul style="margin-top: 10px; padding-left: 20px;">
+                                    <li>Hierarchical mind maps of complex topics</li>
+                                    <li>Visual summaries of lessons</li>
+                                    <li>Connection maps showing concept relationships</li>
+                                    <li>Topic breakdowns for easier understanding</li>
+                                </ul>
+                                <p style="margin-top: 10px; font-size: 13px; color: #999;">
+                                    📊 Try asking me to create a mind map for any topic!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <form id="chatForm">
+                            <div class="input-wrapper">
+                                <input type="text" id="messageInput"
+                                    placeholder="Ask me to create a mind map for any topic..." autocomplete="off">
+                                <button type="submit" class="send-btn">
+                                    <span>Send</span>
+                                    <span style="margin-left: 8px;">→</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/assistant.js') }}"></script>
+    <script>
+        const assistantType = 'mind_map';
+        document.getElementById('chatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const params = {
+                subject: document.getElementById('subject').value
+            };
+            sendMessage(e, assistantType, params);
+        });
+    </script>
+</body>
+
+</html>

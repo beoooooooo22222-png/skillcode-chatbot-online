@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Assistant - SkillCode GPT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+</head>
+
+<body>
+    <div class="assistant-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">
+                    <img src="{{ url_for('static', filename='images/app-background.jpg') }}" alt="Logo"
+                        style="height: 30px; vertical-align: middle; margin-right: 8px;">
+                </span>
+                <span>SkillCode GPT</span>
+                <button class="sidebar-toggle-main" id="sidebarToggleBtn">
+                    <span id="toggleIcon">◀</span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard" class="nav-link">
+                    <span class="nav-icon">🏠</span> <span>Dashboard</span>
+                </a>
+                <a href="/general-assistant" class="nav-link">
+                    <span class="nav-icon">💡</span> <span>General Assistant</span>
+                </a>
+                <a href="/homework-assistant" class="nav-link">
+                    <span class="nav-icon">📝</span> <span>Homework</span>
+                </a>
+                <a href="/exam-preparation" class="nav-link">
+                    <span class="nav-icon">📚</span> <span>Exam Prep</span>
+                </a>
+                <a href="/study-planner" class="nav-link">
+                    <span class="nav-icon">📅</span> <span>Study Planner</span>
+                </a>
+                <a href="/tutor-assistant" class="nav-link active">
+                    <span class="nav-icon">👨‍🏫</span> <span>Tutor</span>
+                </a>
+                <a href="/mind-mapper" class="nav-link">
+                    <span class="nav-icon">🧠</span> <span>Mind Mapper</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar History -->
+            <div class="sidebar-history">
+                <div class="sidebar-history-title">🕒 Recent Lessons</div>
+                <div class="sidebar-history-list" id="sidebarHistoryList">
+                    <!-- History items will be populated via JS -->
+                    <div style="color: #999; font-size: 11px; padding: 10px; text-align: center;">
+                        No history yet.
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <a href="/logout" class="logout-link">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="chat-container">
+                <header class="assistant-header"
+                    style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>Tutor Assistant</h1>
+                        <p>Your personal virtual teacher with references to lesson materials</p>
+                    </div>
+                    <button class="new-chat-btn" onclick="startNewChat()">
+                        <span>✨</span> New Chat
+                    </button>
+                </header>
+
+                <!-- Customization Panel -->
+                <div class="customization-panel" id="tutor-panel">
+                    <div class="panel-header">
+                        <h3>👨‍🏫 Tutor Settings</h3>
+                        <button class="panel-toggle">▼</button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="params-grid">
+                            <div class="param-group" style="max-width: 400px;">
+                                <label for="subject">Focus Lesson / Book</label>
+                                <select id="subject" class="subject-dropdown">
+                                    <option value="">Loading subjects...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-area">
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>👨‍🏫 Hello! I'm your personal tutor. I can:</p>
+                                <ul style="margin-top: 10px; padding-left: 20px;">
+                                    <li>Explain concepts from your lessons</li>
+                                    <li>Correct your mistakes and guide you</li>
+                                    <li>Reference specific materials where concepts are taught</li>
+                                    <li>Suggest what you should review next</li>
+                                </ul>
+                                <p style="margin-top: 10px; font-size: 13px; color: #999;">
+                                    💡 Ask me anything and I'll refer you to the exact lesson materials!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <form id="chatForm">
+                            <div class="input-wrapper">
+                                <input type="text" id="messageInput"
+                                    placeholder="Ask your tutor anything about your studies..." autocomplete="off">
+                                <button type="submit" class="send-btn">
+                                    <span>Send</span>
+                                    <span style="margin-left: 8px;">→</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+
+
+    <script src="{{ url_for('static', filename='js/assistant.js') }}"></script>
+    <script>
+        const assistantType = 'tutor';
+        document.getElementById('chatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const params = {
+                subject: document.getElementById('subject').value
+            };
+            sendMessage(e, assistantType, params);
+        });
+    </script>
+</body>
+
+</html>

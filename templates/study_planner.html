@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Planner - SkillCode GPT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+</head>
+
+<body>
+    <div class="assistant-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">
+                    <img src="{{ url_for('static', filename='images/app-background.jpg') }}" alt="Logo"
+                        style="height: 30px; vertical-align: middle; margin-right: 8px;">
+                </span>
+                <span>SkillCode GPT</span>
+                <button class="sidebar-toggle-main" id="sidebarToggleBtn">
+                    <span id="toggleIcon">◀</span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard" class="nav-link">
+                    <span class="nav-icon">🏠</span> <span>Dashboard</span>
+                </a>
+                <a href="/general-assistant" class="nav-link">
+                    <span class="nav-icon">💡</span> <span>General Assistant</span>
+                </a>
+                <a href="/homework-assistant" class="nav-link">
+                    <span class="nav-icon">📝</span> <span>Homework</span>
+                </a>
+                <a href="/exam-preparation" class="nav-link">
+                    <span class="nav-icon">📚</span> <span>Exam Prep</span>
+                </a>
+                <a href="/study-planner" class="nav-link active">
+                    <span class="nav-icon">📅</span> <span>Study Planner</span>
+                </a>
+                <a href="/tutor-assistant" class="nav-link">
+                    <span class="nav-icon">👨‍🏫</span> <span>Tutor</span>
+                </a>
+                <a href="/mind-mapper" class="nav-link">
+                    <span class="nav-icon">🧠</span> <span>Mind Mapper</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar History -->
+            <div class="sidebar-history">
+                <div class="sidebar-history-title">🕒 Recent Plans</div>
+                <div class="sidebar-history-list" id="sidebarHistoryList">
+                    <!-- History items will be populated via JS -->
+                    <div style="color: #999; font-size: 11px; padding: 10px; text-align: center;">
+                        No history yet.
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <a href="/logout" class="logout-link">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="chat-container">
+                <header class="assistant-header"
+                    style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>📅 Study Planner</h1>
+                        <p>Create adaptive study plans personalized to your schedule and goals</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="download-chat-btn" onclick="downloadFullChat('Study_Plan')">
+                            <span>📄</span> Download PDF
+                        </button>
+                        <button class="new-chat-btn" onclick="startNewChat()">
+                            <span>✨</span> New Chat
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Customization Panel -->
+                <div class="customization-panel" id="planner-panel">
+                    <div class="panel-header">
+                        <h3>📅 Planner Settings</h3>
+                        <button class="panel-toggle">▼</button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="params-grid">
+                            <div class="param-group" style="grid-column: span 2;">
+                                <label for="planSubject">Subjects (Select one or more - Ctrl/Cmd click)</label>
+                                <select id="planSubject" class="subject-dropdown" multiple
+                                    style="height: 120px; padding: 5px;">
+                                    <option value="">Loading subjects...</option>
+                                </select>
+                            </div>
+                            <div class="param-group">
+                                <label for="dailyHours">Daily Study Hours</label>
+                                <input type="number" id="dailyHours" value="2" min="1" max="16">
+                            </div>
+                            <div class="param-group">
+                                <label for="sleepTime">Sleep Hours</label>
+                                <input type="text" id="sleepTime" value="8 hours">
+                            </div>
+                            <div class="param-group">
+                                <label for="duration">Study Duration (Days)</label>
+                                <input type="number" id="duration" value="30" min="1">
+                            </div>
+                        </div>
+                        <div class="planner-actions" style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="send-btn" id="generatePlanBtn" style="padding: 10px 20px;">
+                                🚀 Generate New Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-area">
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>📅 Welcome to Your Personal Study Planner! I'll help you:</p>
+                                <ul style="margin-top: 10px; padding-left: 20px;">
+                                    <li>Create personalized study schedules</li>
+                                    <li>Allocate topics across available time</li>
+                                    <li>Recommend adaptive learning paths</li>
+                                    <li>Plan review sessions for better retention</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <form id="chatForm">
+                            <div class="input-wrapper">
+                                <input type="text" id="messageInput"
+                                    placeholder="Ask for study tips or modify your plan..." autocomplete="off">
+                                <button type="submit" class="send-btn">
+                                    <span>Send</span>
+                                    <span style="margin-left: 8px;">→</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/assistant.js') }}"></script>
+    <script>
+        const assistantType = 'study_plan';
+
+        function generatePlan() {
+            const subjectSelect = document.getElementById('planSubject');
+            const selectedSubjects = Array.from(subjectSelect.selectedOptions).map(opt => opt.value).filter(v => v);
+
+            if (selectedSubjects.length === 0) {
+                alert('Please select at least one subject/book.');
+                return;
+            }
+
+            const params = {
+                subject: selectedSubjects.join(', '),
+                daily_hours: parseInt(document.getElementById('dailyHours').value),
+                sleep_time: document.getElementById('sleepTime').value,
+                duration_days: parseInt(document.getElementById('duration').value)
+            };
+
+            const btn = document.getElementById('generatePlanBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Generating...';
+            btn.disabled = true;
+
+            fetch('/api/generate-study-plan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                    if (data.success) {
+                        const messageDiv = addMessage('bot', data.plan);
+                        addDownloadButton(messageDiv, 'Study_Plan');
+                    } else {
+                        addMessage('bot', 'Error: ' + data.error);
+                    }
+                })
+                .catch(err => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    addMessage('bot', 'Error: Failed to generate plan.');
+                });
+        }
+
+        // Attach to button
+        document.getElementById('generatePlanBtn').addEventListener('click', generatePlan);
+
+        document.getElementById('chatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const subjectSelect = document.getElementById('planSubject');
+            const selectedSubjects = Array.from(subjectSelect.selectedOptions).map(opt => opt.value).filter(v => v);
+
+            const params = {
+                subject: selectedSubjects.join(', ')
+            };
+            sendMessage(e, assistantType, params);
+        });
+    </script>
+</body>
+
+</html>

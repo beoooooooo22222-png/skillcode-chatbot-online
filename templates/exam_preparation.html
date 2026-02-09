@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Preparation - SkillCode GPT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+</head>
+
+<body>
+    <div class="assistant-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">
+                    <img src="{{ url_for('static', filename='images/app-background.jpg') }}" alt="Logo"
+                        style="height: 30px; vertical-align: middle; margin-right: 8px;">
+                </span>
+                <span>SkillCode GPT</span>
+                <button class="sidebar-toggle-main" id="sidebarToggleBtn">
+                    <span id="toggleIcon">◀</span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/dashboard" class="nav-link">
+                    <span class="nav-icon">🏠</span> <span>Dashboard</span>
+                </a>
+                <a href="/general-assistant" class="nav-link">
+                    <span class="nav-icon">💡</span> <span>General Assistant</span>
+                </a>
+                <a href="/homework-assistant" class="nav-link">
+                    <span class="nav-icon">📝</span> <span>Homework</span>
+                </a>
+                <a href="/exam-preparation" class="nav-link active">
+                    <span class="nav-icon">📚</span> <span>Exam Prep</span>
+                </a>
+                <a href="/study-planner" class="nav-link">
+                    <span class="nav-icon">📅</span> <span>Study Planner</span>
+                </a>
+                <a href="/tutor-assistant" class="nav-link">
+                    <span class="nav-icon">👨‍🏫</span> <span>Tutor</span>
+                </a>
+                <a href="/mind-mapper" class="nav-link">
+                    <span class="nav-icon">🧠</span> <span>Mind Mapper</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar History -->
+            <div class="sidebar-history">
+                <div class="sidebar-history-title">🕒 Recent Prep</div>
+                <div class="sidebar-history-list" id="sidebarHistoryList">
+                    <!-- History items will be populated via JS -->
+                    <div style="color: #999; font-size: 11px; padding: 10px; text-align: center;">
+                        No history yet.
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <a href="/logout" class="logout-link">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="chat-container">
+                <header class="assistant-header"
+                    style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>📚 Exam Preparation</h1>
+                        <p>Generate practice exams and quizzes tailored to your needs</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="download-chat-btn" onclick="downloadFullChat('Exam_Prep')">
+                            <span>📄</span> Download PDF
+                        </button>
+                        <button class="new-chat-btn" onclick="startNewChat()">
+                            <span>✨</span> New Chat
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Customization Panel -->
+                <div class="customization-panel" id="exam-panel">
+                    <div class="panel-header">
+                        <h3>📝 Exam Settings</h3>
+                        <button class="panel-toggle">▼</button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="params-grid">
+                            <div class="param-group">
+                                <label for="numQuestions">Number of Questions</label>
+                                <input type="number" id="numQuestions" value="10" min="1" max="50">
+                            </div>
+                            <div class="param-group">
+                                <label for="difficulty">Difficulty</label>
+                                <select id="difficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                            <div class="param-group">
+                                <label for="questionType">Question Type</label>
+                                <select id="questionType">
+                                    <option value="mcq">Multiple Choice (MCQ)</option>
+                                    <option value="essay">Short Answer / Essay</option>
+                                    <option value="mixed" selected>Mixed</option>
+                                </select>
+                            </div>
+                            <div class="param-group">
+                                <label for="subject">Subject/Topic</label>
+                                <select id="subject" class="subject-dropdown">
+                                    <option value="">Loading subjects...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="exam-actions" style="margin-top: 15px;">
+                            <button class="send-btn" id="generateExamBtn" style="padding: 10px 20px;">
+                                📝 Generate Practice Exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-area">
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>📚 Welcome to Exam Preparation! You can:</p>
+                                <ul style="margin-top: 10px; padding-left: 20px;">
+                                    <li>Generate practice exams with custom parameters</li>
+                                    <li>Ask questions about specific exam topics</li>
+                                    <li>Get explanations for difficult questions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <form id="chatForm">
+                            <div class="input-wrapper">
+                                <input type="text" id="messageInput"
+                                    placeholder="Ask about exam topics or test your knowledge..." autocomplete="off">
+                                <button type="submit" class="send-btn">
+                                    <span>Send</span>
+                                    <span style="margin-left: 8px;">→</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/assistant.js') }}"></script>
+    <script>
+        const assistantType = 'exam';
+
+        function generateExam() {
+            const params = {
+                num_questions: parseInt(document.getElementById('numQuestions').value),
+                difficulty: document.getElementById('difficulty').value,
+                question_type: document.getElementById('questionType').value,
+                subject: document.getElementById('subject').value
+            };
+
+            const btn = document.getElementById('generateExamBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Generating...';
+            btn.disabled = true;
+
+            fetch('/api/generate-exam', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                    if (data.success) {
+                        const messageDiv = addMessage('bot', data.exam);
+                        // Add download button to the generated exam message
+                        addDownloadButton(messageDiv, 'Practice_Exam');
+                    } else {
+                        addMessage('bot', 'Error: ' + data.error);
+                    }
+                })
+                .catch(err => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    addMessage('bot', 'Error: Failed to generate exam.');
+                });
+        }
+
+        // Attach to button
+        document.getElementById('generateExamBtn').addEventListener('click', generateExam);
+
+        document.getElementById('chatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const params = {
+                subject: document.getElementById('subject').value
+            };
+            sendMessage(e, assistantType, params);
+        });
+    </script>
+</body>
+
+</html>

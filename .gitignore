@@ -1,0 +1,39 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+
+# Flask
+flask_session/
+
+# Data
+# skillcode.db
+# vector_store/
+
+# Ignore all except essential
+*
+!app.py
+!src/
+!src/**
+!static/
+!static/**
+!templates/
+!templates/**
+!Procfile
+!requirements.txt
+!render.yaml
+!skillcode.db
+!vector_store/
+!vector_store/**
+!.gitignore
+!README.md
+!QUICK_DEPLOY.md
+
+# OS
+.DS_Store
+Thumbs.db
