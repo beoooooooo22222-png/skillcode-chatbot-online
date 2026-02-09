@@ -10,15 +10,18 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-BOOKS_DIR = r"D:\Work\books"
+BOOKS_DIR = "books"
 
 def upload_books(db):
     """Upload books from folder to database"""
-    logger.info(f"[{datetime.now()}] Starting scheduled book upload...")
-    
+    # Ensure books directory exists
     if not os.path.exists(BOOKS_DIR):
-        logger.warning(f"Books directory not found: {BOOKS_DIR}")
-        return
+        try:
+            os.makedirs(BOOKS_DIR)
+            logger.info(f"Created books directory: {BOOKS_DIR}")
+        except OSError:
+            logger.warning(f"Could not create books directory: {BOOKS_DIR}")
+            return
     
     try:
         pdf_files = []
