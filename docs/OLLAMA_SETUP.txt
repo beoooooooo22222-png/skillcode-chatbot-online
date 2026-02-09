@@ -1,0 +1,59 @@
+SETUP INSTRUCTIONS FOR OLLAMA
+==============================
+
+Ollama is a completely FREE, local AI that runs on your computer without needing any API keys.
+
+SETUP STEPS:
+============
+
+1. Download Ollama:
+   - Go to: https://ollama.ai
+   - Click "Download"
+   - Choose Windows version
+   - Install it
+
+2. Start Ollama Server:
+   - Open PowerShell/CMD
+   - Run: ollama serve
+   - Leave this window open
+   - You should see: "Listening on 127.0.0.1:11434"
+
+3. Download a Model (in a NEW terminal while step 2 is running):
+   - Open a new PowerShell/CMD window
+   - Run: ollama pull mistral
+   - Wait for download (about 5-10 minutes, ~4GB)
+   - You'll see "success" when done
+
+4. Test it works:
+   - Run: ollama run mistral
+   - Type: "Hello"
+   - If you get a response, it's working!
+
+5. Start the chatbot:
+   - Run: cd "d:\Work\chatbot with oracle"
+   - Run: .\.venv\Scripts\python.exe app.py
+   - Go to http://localhost:5000
+   - Chat should now work!
+
+AVAILABLE MODELS (choose one):
+==============================
+- mistral (fast, good quality) - RECOMMENDED
+- neural-chat (fast, conversational)
+- llama2 (good quality, slower)
+- orca-mini (smallest, fastest)
+
+To switch models, edit grok_service.py line 14:
+   self.model = "mistral"  # Change to your choice
+
+TROUBLESHOOTING:
+================
+Q: "Connection refused" error?
+A: Ollama isn't running. Make sure you ran "ollama serve" and left it running.
+
+Q: Model not found?
+A: Download it first. Run: ollama pull [model-name]
+
+Q: Takes too long to respond?
+A: Try a faster model like "neural-chat" or "orca-mini"
+
+THAT'S IT! No API keys, completely free!

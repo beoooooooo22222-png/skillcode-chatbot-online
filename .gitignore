@@ -15,24 +15,24 @@ flask_session/
 # skillcode.db
 # vector_store/
 
-# Ignore all except essential
-*
-!app.py
-!src/
-!src/**
-!static/
-!static/**
-!templates/
-!templates/**
-!Procfile
+# Exclude large/sensitive scripts
+CLICK_TO_DEPLOY.bat
+silent_push.ps1
+push_log.txt
+push_error.txt
+sanitize_all.py
+sanitize_all_v2.py
+sanitize_docs.py
+tunnel_log.txt
+tunnel_output.txt
+tunnel_web.txt
+cloudflared.exe
+*.exe
+
+# Essential files (Allow these)
 !requirements.txt
+!Procfile
 !render.yaml
-!skillcode.db
-!vector_store/
-!vector_store/**
-!.gitignore
-!README.md
-!QUICK_DEPLOY.md
 
 # OS
 .DS_Store
