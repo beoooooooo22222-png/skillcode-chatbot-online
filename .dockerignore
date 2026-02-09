@@ -1,0 +1,27 @@
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+.venv
+venv
+ENV
+.env
+
+# Deployment caches
+.git
+.gitignore
+.dockerignore
+Dockerfile
+*.md
+*.bat
+scripts/
+docs/
+push_log.txt
+push_error.txt
+sanitize_all.py
+sanitize_all_v2.py
+sanitize_docs.py
+tunnel_log.txt
+cloudflared.exe
+*.exe
